@@ -1,6 +1,7 @@
 import {useLiveQuery} from 'dexie-react-hooks';
 
 export const LOADING: unique symbol = Symbol('loading');
+export type DBResult<Type> = Type | typeof LOADING | undefined;
 
 export function isLoading(v: object | typeof LOADING | undefined): v is typeof LOADING {
   return v === LOADING;

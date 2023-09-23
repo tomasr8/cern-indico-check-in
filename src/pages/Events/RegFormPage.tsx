@@ -1,5 +1,5 @@
-import {useEffect, useMemo, useState} from 'react';
-import {useNavigate, useParams} from 'react-router-dom';
+import { useEffect, useMemo, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import {
   CalendarDaysIcon,
   CheckCircleIcon,
@@ -7,20 +7,20 @@ import {
   UserGroupIcon,
 } from '@heroicons/react/20/solid';
 import IconFeather from '../../Components/Icons/Feather';
-import {Typography} from '../../Components/Tailwind';
-import {LoadingIndicator} from '../../Components/Tailwind/LoadingIndicator';
-import Table, {rowProps} from '../../Components/Tailwind/Table';
+import { Typography } from '../../Components/Tailwind';
+import { LoadingIndicator } from '../../Components/Tailwind/LoadingIndicator';
+import Table, { rowProps } from '../../Components/Tailwind/Table';
 import TopTab from '../../Components/TopTab';
-import db, {deleteRegform as _deleteRegform} from '../../db/db';
-import {useConfirmModal, useErrorModal} from '../../hooks/useModal';
-import {isLoading, hasValue, useQuery} from '../../utils/db';
-import {wait} from '../../utils/wait';
-import {NotFound} from '../NotFound';
-import {syncEvent, syncParticipants, syncRegform} from './sync';
-import {IndicoLink, Title} from './utils';
+import db, { Event, Regform, deleteRegform as _deleteRegform } from '../../db/db';
+import { useConfirmModal, useErrorModal } from '../../hooks/useModal';
+import { isLoading, hasValue, useQuery, DBResult } from '../../utils/db';
+import { wait } from '../../utils/wait';
+import { NotFound } from '../NotFound';
+import { syncEvent, syncParticipants, syncRegform } from './sync';
+import { IndicoLink, Title } from './utils';
 
 const RegistrationFormPage = () => {
-  const {id, regformId} = useParams();
+  const { id, regformId } = useParams();
   const navigate = useNavigate();
   const errorModal = useErrorModal();
   const confirmModal = useConfirmModal();
@@ -28,19 +28,19 @@ const RegistrationFormPage = () => {
 
   const event = useQuery(() => db.events.get(Number(id)), [id]);
   const regform = useQuery(
-    () => db.regforms.get({id: Number(regformId), eventId: Number(id)}),
+    () => db.regforms.get({ id: Number(regformId), eventId: Number(id) }),
     [id, regformId]
   );
   const participants = useQuery(
-    () => db.participants.where({regformId: Number(regformId)}).sortBy('fullName'),
+    () => db.participants.where({ regformId: Number(regformId) }).sortBy('fullName'),
     [regformId]
   );
 
   useEffect(() => {
     async function _sync() {
       const controller = new AbortController();
-      const event = await db.events.get({id: Number(id)});
-      const regform = await db.regforms.get({id: Number(regformId)});
+      const event = await db.events.get({ id: Number(id) });
+      const regform = await db.regforms.get({ id: Number(regformId) });
       if (!event || !regform) {
         return;
       }
@@ -55,7 +55,7 @@ const RegistrationFormPage = () => {
       try {
         await _sync();
       } catch (err: any) {
-        errorModal({title: 'Something went wrong when fetching updates', content: err.message});
+        errorModal({ title: 'Something went wrong when fetching updates', content: err.message });
       } finally {
         setIsSyncing(false);
       }
@@ -70,73 +70,33 @@ const RegistrationFormPage = () => {
       return [];
     }
 
-    return participants.map(({id, checkedIn, fullName}) => ({
+    return participants.map(({ id, checkedIn, fullName }) => ({
       fullName,
       checkedIn,
       onClick: async () => {
         await wait(100);
-        navigate(`/event/${event.id}/${regform.id}/${id}`, {state: {backBtnText: regform.title}});
+        navigate(`/event/${event.id}/${regform.id}/${id}`, { state: { backBtnText: regform.title } });
       },
     }));
   }, [event, regform, participants, navigate]);
 
-  const deleteRegform = async (id: number) => {
-    try {
-      await _deleteRegform(id);
-    } catch (err: any) {
-      errorModal({
-        title: 'Something went wrong when deleting a registration form',
-        content: err.message,
-      });
-    }
-  };
-
-  let topTab;
-  if (hasValue(event) && hasValue(regform)) {
-    topTab = (
-      <TopTab
-        settingsItems={[
-          {
-            text: 'Remove registration form',
-            icon: <TrashIcon />,
-            onClick: () => {
-              if (!hasValue(event) || !hasValue(regform)) {
-                return;
-              }
-
-              confirmModal({
-                title: 'Are you sure?',
-                content: 'You can always re-add the registration form by scanning its QR code',
-                confirmBtnText: 'Delete',
-                onConfirm: async () => {
-                  await deleteRegform(regform.id);
-                  navigate(`/event/${event.id}`);
-                },
-              });
-            },
-          },
-        ]}
-      />
-    );
-  } else {
-    topTab = <TopTab />;
-  }
+  const topNav = <RegformTopNav event={event} regform={regform} />
 
   if (isLoading(event) || isLoading(regform) || isLoading(participants)) {
-    return topTab;
+    return topNav;
   }
 
   if (!event) {
     return (
       <>
-        {topTab}
+        {topNav}
         <NotFound text="Event not found" icon={<CalendarDaysIcon />} />
       </>
     );
   } else if (!regform) {
     return (
       <>
-        {topTab}
+        {topNav}
         <NotFound text="Registration form not found" icon={<IconFeather />} />
       </>
     );
@@ -144,7 +104,7 @@ const RegistrationFormPage = () => {
 
   return (
     <>
-      {topTab}
+      {topNav}
       <div className="pt-1">
         <div>
           <div className="flex flex-col items-center gap-2 px-4">
@@ -176,7 +136,7 @@ const RegistrationFormPage = () => {
 
 export default RegistrationFormPage;
 
-function RegformStatus({isOpen}: {isOpen: boolean | undefined}) {
+function RegformStatus({ isOpen }: { isOpen: boolean | undefined }) {
   if (isOpen === undefined) {
     return null;
   }
@@ -245,5 +205,52 @@ function LoadingParticipantsBanner() {
       </Typography>
       <LoadingIndicator size="md" />
     </div>
+  );
+}
+
+function RegformTopNav({ event, regform }: { event: DBResult<Event>; regform: DBResult<Regform> }) {
+  const navigate = useNavigate();
+  const errorModal = useErrorModal();
+  const confirmModal = useConfirmModal();
+
+  if (!hasValue(event) || !hasValue(regform)) {
+    return <TopTab />;
+  }
+
+  const deleteRegform = async (id: number) => {
+    try {
+      await _deleteRegform(id);
+    } catch (err: any) {
+      errorModal({
+        title: 'Something went wrong when deleting a registration form',
+        content: err.message,
+      });
+    }
+  };
+
+  return (
+    <TopTab
+      settingsItems={[
+        {
+          text: 'Remove registration form',
+          icon: <TrashIcon />,
+          onClick: () => {
+            if (!hasValue(event) || !hasValue(regform)) {
+              return;
+            }
+
+            confirmModal({
+              title: 'Are you sure?',
+              content: 'You can always re-add the registration form by scanning its QR code',
+              confirmBtnText: 'Delete',
+              onConfirm: async () => {
+                await deleteRegform(regform.id);
+                navigate(`/event/${event.id}`);
+              },
+            });
+          },
+        },
+      ]}
+    />
   );
 }

@@ -18,7 +18,6 @@ const EventPage = () => {
   const navigate = useNavigate();
   const {id: eventId} = useParams();
   const errorModal = useErrorModal();
-  const confirmModal = useConfirmModal();
 
   const event = useQuery(() => db.events.get(Number(eventId)), [eventId]);
   const regforms = useQuery(
@@ -46,23 +45,14 @@ const EventPage = () => {
     return () => controller.abort();
   }, [eventId, errorModal]);
 
-  const deleteEvent = async id => {
-    try {
-      await _deleteEvent(id);
-    } catch (err) {
-      errorModal({
-        title: 'Something went wrong when deleting a registration form',
-        content: err.message,
-      });
-    }
-  };
+  const topNav = <EventTopNav event={event} />
 
   if (isLoading(event) || isLoading(regforms)) {
-    return <TopTab />;
+    return topNav;
   } else if (!hasValue(event)) {
     return (
       <>
-        <TopTab />
+        {topNav}
         <NotFound text="Event not found" icon={<CalendarDaysIcon />} />
       </>
     );
@@ -124,31 +114,9 @@ const EventPage = () => {
     </button>
   ));
 
-  const settingsItems = [
-    {
-      text: 'Remove event',
-      icon: <TrashIcon />,
-      onClick: () => {
-        if (!hasValue(event)) {
-          return;
-        }
-
-        confirmModal({
-          title: 'Are you sure?',
-          content: 'You can always re-add the event by scanning its QR code',
-          confirmBtnText: 'Delete',
-          onConfirm: async () => {
-            await deleteEvent(event.id);
-            navigate(`/`);
-          },
-        });
-      },
-    },
-  ];
-
   return (
     <>
-      <TopTab settingsItems={settingsItems} />
+      {topNav}
       <div className="px-4 pt-1">
         <div className="flex flex-col items-center gap-2">
           <Title title={event.title} />
@@ -183,4 +151,49 @@ function NoRegformsBanner() {
       </div>
     </div>
   );
+}
+
+function EventTopNav({event}) {
+  const navigate = useNavigate();
+  const errorModal = useErrorModal();
+  const confirmModal = useConfirmModal();
+
+  if(!hasValue(event)) {
+    return <TopTab />
+  }
+
+  const deleteEvent = async id => {
+    try {
+      await _deleteEvent(id);
+    } catch (err) {
+      errorModal({
+        title: 'Something went wrong when deleting a registration form',
+        content: err.message,
+      });
+    }
+  };
+
+  const settingsItems = [
+    {
+      text: 'Remove event',
+      icon: <TrashIcon />,
+      onClick: () => {
+        if (!hasValue(event)) {
+          return;
+        }
+
+        confirmModal({
+          title: 'Are you sure?',
+          content: 'You can always re-add the event by scanning its QR code',
+          confirmBtnText: 'Delete',
+          onConfirm: async () => {
+            await deleteEvent(event.id);
+            navigate(`/`);
+          },
+        });
+      },
+    },
+  ];
+
+  return <TopTab settingsItems={settingsItems} />
 }
