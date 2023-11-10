@@ -85,10 +85,10 @@ export const CheckinToggle = ({checked, isLoading, onClick}: CheckinToggleProps)
                     bg-gray-200 px-5 after:absolute after:left-[4px] after:top-[4px] after:z-[3]
                     after:h-14 after:w-14 after:rounded-full
                     after:border after:border-gray-300 after:bg-white after:transition-all
-                    after:duration-[200ms] after:content-[''] peer-checked:bg-blue-600
-                    peer-checked:after:translate-x-[200%] peer-checked:after:border-0
-                    peer-checked:after:bg-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300
-                    dark:border-gray-600 dark:bg-gray-600 dark:after:bg-gray-300
+                    after:duration-[200ms] after:content-[''] peer-checked:bg-blue-600 peer-checked:after:translate-x-[200%]
+                    peer-checked:after:border-0 peer-checked:after:bg-white
+                    peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:border-gray-600
+                    dark:bg-gray-600 dark:after:bg-gray-300 dark:peer-checked:bg-blue-700
                     dark:peer-checked:after:bg-gray-300 dark:peer-focus:ring-blue-800 ${
                       isLoading ? 'opacity-70' : ''
                     }`}
@@ -101,7 +101,7 @@ export const CheckinToggle = ({checked, isLoading, onClick}: CheckinToggleProps)
             }}
             className={`absolute bottom-[20%] left-0 right-0 top-[20%] z-[2] flex items-center justify-start
                         overflow-hidden whitespace-nowrap rounded-full ${
-                          checked ? 'bg-blue-600' : 'bg-gray-200 dark:bg-gray-600'
+                          checked ? 'bg-blue-600 dark:bg-blue-700' : 'bg-gray-200 dark:bg-gray-600'
                         }`}
           >
             <span className="pl-1 text-white dark:text-gray-200">Checked in</span>

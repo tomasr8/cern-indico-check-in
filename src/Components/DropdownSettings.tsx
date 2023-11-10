@@ -30,7 +30,7 @@ export default function DropdownSettings({items}: {items: SettingsItem[]}) {
           setIsVisible(v => !v);
         }}
         className="inline-flex items-center rounded-full p-2 text-center text-sm font-medium text-gray-700
-                   transition-all focus:bg-gray-200 focus:outline-none dark:text-gray-300 dark:focus:bg-gray-800"
+                   transition-all focus:bg-gray-300/20 focus:outline-none dark:text-gray-300 dark:focus:bg-blue-700/20"
       >
         <EllipsisVerticalIcon className="min-h-[1.5rem] min-w-[1.5rem]" />
       </button>

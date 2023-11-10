@@ -64,7 +64,7 @@ function ScanButton() {
         type="button"
         aria-label="Scan"
         onClick={goToScan}
-        className="group absolute top-[-50%] rounded-full bg-gray-50 p-1 text-white dark:bg-gray-900"
+        className="group absolute top-[-50%] rounded-full bg-gray-50 p-1 text-white dark:bg-[#061b3c]"
       >
         <QrCodeIcon
           className="h-6 min-h-[3rem] w-6 min-w-[3rem] rounded-full

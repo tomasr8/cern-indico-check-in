@@ -5,7 +5,7 @@ import {AccompanyingPersonsFieldData} from './fields';
 export default function AccompanyingPersons({persons}: {persons: AccompanyingPersonsFieldData[]}) {
   return (
     <div
-      className="rounded-xl border border-blue-300 bg-blue-100 p-4 text-sm text-blue-800 dark:border-blue-800 dark:bg-gray-800 dark:text-blue-400"
+      className="rounded-xl border border-blue-300 bg-blue-100 p-4 text-sm text-blue-800 dark:border-blue-800 dark:bg-indigo-800/20 dark:text-blue-400"
       role="alert"
     >
       <div className="flex items-center gap-2">

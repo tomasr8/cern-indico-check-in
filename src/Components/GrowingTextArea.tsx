@@ -16,9 +16,9 @@ export default function GrowingTextArea({
         rows={1}
         value={value}
         onInput={onChange}
-        className={`resize-none rounded-xl border border-slate-300
-                    focus:outline-none focus:ring-2
-                    focus:ring-blue-400 dark:border-slate-700 dark:bg-gray-800`}
+        className={`resize-none rounded-xl bg-gray-200
+                    placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-400
+                    dark:bg-gray-700 dark:placeholder-gray-400`}
       />
     </div>
   );

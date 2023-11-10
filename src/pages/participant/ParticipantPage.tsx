@@ -323,9 +323,6 @@ function RegistrationSection(section: SectionProps) {
   let border = '';
   if (isFirst) {
     border += ' rounded-t-xl';
-    if (!isUnique && !isOpen) {
-      border += ' border-b-0';
-    }
   }
   if (isLast && !isOpen) {
     border += ' rounded-b-xl';
@@ -333,12 +330,15 @@ function RegistrationSection(section: SectionProps) {
   if (isUnique && !isOpen) {
     border += ' rounded-b-xl';
   }
+  if (!isFirst && !isUnique) {
+    border += ' border-t';
+  }
 
   let bgColor = '';
   if (isOpen) {
-    bgColor += ' bg-blue-100 dark:bg-gray-700';
+    bgColor += ' bg-blue-100 dark:bg-blue-800';
   } else {
-    bgColor += ' bg-gray-100 dark:bg-gray-800';
+    bgColor += ' bg-gray-200 dark:bg-gray-700';
   }
 
   let expandedBorder = '';
@@ -352,8 +352,8 @@ function RegistrationSection(section: SectionProps) {
         <button
           type="button"
           disabled={fields.length === 0}
-          className={`flex w-full items-center justify-between border border-gray-200 p-5 text-left
-                      font-medium transition-all dark:border-gray-700 ${bgColor} ${border}`}
+          className={`flex w-full items-center justify-between border-gray-300 p-5 text-left
+                      font-medium transition-colors dark:border-gray-600 ${bgColor} ${border}`}
           onClick={() => setIsOpen(o => !o)}
         >
           <Typography variant="h4" className="flex w-full justify-between">
@@ -365,7 +365,7 @@ function RegistrationSection(section: SectionProps) {
       </div>
       <div className={isOpen ? '' : 'hidden'}>
         <div
-          className={`flex flex-col gap-2 border-l border-r px-5 py-5 dark:border-gray-700 ${expandedBorder}`}
+          className={`flex flex-col gap-2 bg-gray-100 px-5 py-5 dark:border-gray-700 dark:bg-gray-800 ${expandedBorder}`}
         >
           {fields.map(field => (
             <Field key={field.id} {...field} />

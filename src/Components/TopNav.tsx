@@ -25,7 +25,7 @@ export default function TopNav({
       <div className="mb-4 flex justify-between p-2">
         <div className="flex h-12 items-center gap-4" onClick={() => navigate('/')}>
           <img src={Logo} alt="Logo" width={48} height={48}></img>
-          <span className="whitespace-nowrap text-xl font-semibold text-white dark:text-gray-200">
+          <span className="whitespace-nowrap text-xl font-semibold text-gray-800 dark:text-gray-200">
             Indico check-in
           </span>
         </div>
@@ -37,7 +37,7 @@ export default function TopNav({
         <button
           type="button"
           className="flex max-w-[60%] cursor-pointer items-center rounded-full transition-all
-                     active:bg-gray-200 dark:active:bg-gray-800"
+                     active:bg-gray-300/20 dark:active:bg-blue-700/20"
           onClick={async () => {
             await wait(50);
             // Typescript...
