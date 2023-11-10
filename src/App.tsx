@@ -116,7 +116,7 @@ export default function App() {
   }, [darkMode]);
 
   return (
-    <div className="h-full min-h-screen w-screen overflow-auto bg-gray-50 pb-32 dark:bg-gray-900">
+    <div className="bg-gradient h-full min-h-screen w-screen overflow-auto bg-gray-50 pb-32 dark:bg-gray-900">
       <RouterProvider router={router} />
       <Modal />
     </div>

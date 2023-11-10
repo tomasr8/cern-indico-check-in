@@ -7,3 +7,25 @@
 button {
   -webkit-tap-highlight-color: transparent;
 }
+
+.dark .bg-gradient {
+  /* background: linear-gradient(
+    155deg,
+    rgb(44, 36, 215) 0%,
+    rgb(21, 18, 66) 200px,
+    rgb(17, 24, 39) 300px
+  ); */
+  background-color: #061b3c;
+}
+
+.bg-gradient {
+  /* background: linear-gradient(
+    155deg,
+    rgb(158, 209, 255) 0%,
+    rgb(230, 244, 255) 200px,
+    rgb(249, 250, 251) 300px
+  ); */
+  background-color: #ecf4ff;
+}
+
+/* // dark: #061b3c */

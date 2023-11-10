@@ -7,7 +7,7 @@ export default function Title({title}: {title: string}) {
   return (
     <Typography
       variant="h2"
-      className={`max-w-full cursor-pointer break-words text-center text-gray-600 ${
+      className={`max-w-full cursor-pointer break-words text-center text-gray-700 ${
         !fullTitleVisible ? 'overflow-hidden text-ellipsis whitespace-nowrap' : ''
       }`}
     >

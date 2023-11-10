@@ -173,7 +173,7 @@ function RegformStatus({isOpen}: {isOpen: boolean | undefined}) {
   if (isOpen) {
     color = 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300';
   } else {
-    color = 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300';
+    color = 'bg-red-200 text-red-800 dark:bg-red-900 dark:text-red-300';
   }
 
   return (
@@ -194,14 +194,14 @@ function RegistrationCount({
     <div className="flex flex-wrap gap-2">
       <div className="flex items-center self-center overflow-hidden rounded-full">
         <div
-          className="flex items-center bg-blue-100 py-0.5 pl-2.5 text-xs font-medium
+          className="flex items-center bg-blue-200 py-0.5 pl-2.5 text-xs font-medium
                      text-primary dark:bg-darkSecondary dark:text-secondary"
         >
           <CheckCircleIcon className="mr-1 h-4 w-4" />
           <Typography variant="body1">{checkedInCount}</Typography>
         </div>
         <div
-          className="flex items-center bg-blue-100 px-2.5 py-0.5 text-xs font-medium
+          className="flex items-center bg-blue-200 px-2.5 py-0.5 text-xs font-medium
                      text-primary dark:bg-darkSecondary dark:text-secondary"
         >
           <UserGroupIcon className="mr-1 h-4 w-4" />

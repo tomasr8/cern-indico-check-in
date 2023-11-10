@@ -148,7 +148,7 @@ interface RowProps {
 function Row({fullName, checkedIn, state, onClick, isEven}: RowProps) {
   const background: HTMLElement['className'] = isEven
     ? 'bg-gray-200 dark:bg-gray-800 active:bg-gray-300 dark:active:bg-gray-600'
-    : 'bg-gray-100 dark:bg-gray-700 active:bg-gray-300 dark:active:bg-gray-600';
+    : 'bg-gray-50 dark:bg-gray-700 active:bg-gray-300 dark:active:bg-gray-600';
 
   return (
     <tr
@@ -169,7 +169,7 @@ function Row({fullName, checkedIn, state, onClick, isEven}: RowProps) {
           >
             {fullName}
           </Typography>
-          {checkedIn && <CheckCircleIcon className="h-6 w-6 text-green-500" />}
+          {checkedIn && <CheckCircleIcon className="h-6 w-6 text-blue-500 dark:text-blue-400" />}
         </div>
       </td>
     </tr>
@@ -215,9 +215,9 @@ function SearchInput({
       <input
         type="text"
         ref={inputRef}
-        className="text-md block w-full rounded-full border border-gray-300 bg-gray-50 py-2.5 pl-10 pr-2.5
-               text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-transparent dark:bg-gray-700
-               dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+        className="text-md block w-full rounded-full border border-gray-50 bg-gray-50 py-2.5 pl-10 pr-2.5
+               text-gray-900 placeholder-gray-600 focus:border-blue-500 focus:ring-blue-500 dark:border-transparent
+               dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
         placeholder="Search participants..."
         value={searchValue}
         onChange={onSearchChange}

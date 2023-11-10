@@ -233,7 +233,7 @@ function ParticipantPageContent({
               <RegistrationState state={participant.state} />
               {participant.price > 0 && (
                 <span
-                  className="w-fit rounded-full bg-purple-100 px-2.5 py-1 text-sm font-medium
+                  className="w-fit rounded-full bg-purple-200 px-2.5 py-1 text-sm font-medium
                              text-purple-800 dark:bg-purple-900 dark:text-purple-300"
                 >
                   {participant.formattedPrice}

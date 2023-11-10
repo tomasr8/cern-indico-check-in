@@ -147,7 +147,7 @@ function EventPageContent({
           url={`${event.baseUrl}/event/${event.indicoId}/manage`}
         />
         <span
-          className="mr-2 w-fit rounded-full bg-yellow-100 px-2.5 py-0.5 text-xs font-medium
+          className="mr-2 w-fit rounded-full bg-yellow-200 px-2.5 py-0.5 text-sm font-medium
                        text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300"
         >
           {formatDatetime(event.date)}

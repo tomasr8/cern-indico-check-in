@@ -96,7 +96,7 @@ export function ParticipantFilters({
         <RegistrationStateFilter state={state} onChange={v => setFilters({...filters, state: v})} />
         <SortFilter sortBy={sortBy} onChange={v => setFilters({...filters, sortBy: v})} />
         <div className="mt-6 flex justify-between">
-          <Button onClick={onClose} className="basis-full justify-center" variant="success">
+          <Button onClick={onClose} className="basis-full justify-center" variant="default">
             <CheckIcon className="h-5 w-5" />
             Apply
           </Button>
@@ -224,7 +224,7 @@ export function ToggleFiltersButton({
         type="button"
         onClick={onClick}
         className={`${commonClasses} ${
-          filtersVisible ? 'bg-gray-300 dark:bg-gray-600' : 'bg-gray-200 dark:bg-gray-700'
+          filtersVisible ? 'bg-gray-100 dark:bg-gray-600' : 'bg-gray-50 dark:bg-gray-700'
         } text-gray-600`}
       >
         <FunnelIcon className="h-5 w-5" />
@@ -236,7 +236,7 @@ export function ToggleFiltersButton({
         type="button"
         onClick={onClick}
         className={`${commonClasses} ${
-          filtersVisible ? 'bg-gray-300 dark:bg-gray-600' : 'bg-gray-200 dark:bg-gray-700'
+          filtersVisible ? 'bg-gray-100 dark:bg-gray-600' : 'bg-gray-50 dark:bg-gray-700'
         } text-gray-700`}
       >
         <FunnelIconOutline className="h-5 w-5" />

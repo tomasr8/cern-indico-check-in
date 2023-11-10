@@ -71,8 +71,8 @@ export function PaymentWarning({
 
   return (
     <div
-      className="rounded-xl border border-yellow-300 bg-yellow-50 p-4 text-sm text-yellow-800 dark:border-yellow-800
-                 dark:border-yellow-800 dark:bg-gray-800 dark:text-yellow-300"
+      className="rounded-xl border border-blue-300 bg-blue-100 p-4 text-sm text-blue-800 dark:border-blue-800
+                 dark:border-blue-800 dark:bg-gray-800 dark:text-blue-400"
       role="alert"
     >
       <div className="flex items-center gap-2">
@@ -82,7 +82,7 @@ export function PaymentWarning({
       <div className="mt-4 flex justify-center gap-4">
         {isLoading && <LoadingIndicator />}
         {!isLoading && (
-          <Button variant="success" onClick={onClick}>
+          <Button variant="default" onClick={onClick}>
             <CheckIcon className="h-5 w-5" />
             Mark as paid
           </Button>
