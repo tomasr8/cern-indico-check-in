@@ -42,9 +42,17 @@ export default function TopNav({
             await wait(50);
             // Typescript...
             if (typeof page === 'number') {
-              navigate(page);
+              if (document.startViewTransition) {
+                document.startViewTransition(() => navigate(page));
+              } else {
+                navigate(page);
+              }
             } else {
-              navigate(page);
+              if (document.startViewTransition) {
+                document.startViewTransition(() => navigate(page));
+              } else {
+                navigate(page);
+              }
             }
           }}
         >

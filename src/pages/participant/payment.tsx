@@ -1,10 +1,10 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {ExclamationCircleIcon} from '@heroicons/react/20/solid';
 import {CheckIcon} from '@heroicons/react/24/outline';
 import {Button} from '../../Components/Tailwind';
 import {LoadingIndicator} from '../../Components/Tailwind/LoadingIndicator';
 import {ErrorModalFunction} from '../../context/ModalContextProvider';
-import {Event, Regform, Participant, updateParticipant} from '../../db/db';
+import db, {Event, Regform, Participant, updateParticipant} from '../../db/db';
 import {togglePayment as _togglePayment} from '../../utils/client';
 import {handleError} from '../Events/sync';
 
@@ -33,6 +33,7 @@ async function togglePayment(
   paid: boolean,
   errorModal: ErrorModalFunction
 ) {
+  // await db.participants.update(participant.id, {isPaidLoading: true});
   const response = await _togglePayment(
     {
       serverId: event.serverId,
@@ -44,6 +45,7 @@ async function togglePayment(
   );
 
   if (response.ok) {
+    // return await db.participants.update(participant.id, {isPaid: response.data.isPaid, isPaidLoading: false});
     return await updateParticipant(participant.id, response.data);
   } else {
     handleError(response, 'Something went wrong when updating payment status', errorModal);
@@ -66,8 +68,13 @@ export function PaymentWarning({
   const onClick = async () => {
     setIsLoading(true);
     await markAsPaid(event, regform, participant, errorModal);
-    setIsLoading(false);
   };
+
+  useEffect(() => {
+    if (participant.isPaid) {
+      setIsLoading(false);
+    }
+  }, [participant.isPaid]);
 
   return (
     <div

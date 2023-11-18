@@ -6,6 +6,7 @@ import {
   ChevronDownIcon,
   UserIcon,
   BanknotesIcon,
+  UserCircleIcon,
 } from '@heroicons/react/20/solid';
 import BottomNav from '../../Components/BottomNav';
 import GrowingTextArea from '../../Components/GrowingTextArea';
@@ -77,7 +78,6 @@ export default function ParticipantPage() {
         regform={regform}
         participant={participant}
       />
-      <BottomNav />
     </>
   );
 }
@@ -105,6 +105,7 @@ function ParticipantPageContent({
   const errorModal = useErrorModal();
   const [isCheckinLoading, setIsCheckinLoading] = useState(false);
   const [notes, setNotes] = useState('');
+  const [checkInState, setCheckInState] = useState({checkedIn: false, isLoading: false});
 
   useEffect(() => {
     // remove autoCheckin from location state
@@ -113,6 +114,12 @@ function ParticipantPageContent({
       navigate('.', {replace: true, state: rest});
     }
   }, [navigate, state]);
+
+  // useEffect(() => {
+  //   if(participant) {
+  //     setCheckInState
+  //   }
+  // }, [participant])
 
   const accompanyingPersons = useMemo(() => {
     if (participant?.registrationData) {
@@ -134,6 +141,7 @@ function ParticipantPageContent({
       } catch (err: any) {
         errorModal({title: 'Could not update check-in status', content: err.message});
       } finally {
+        // setCheckInState({ checkedIn: participant.checkedIn, isLoading: false });
         setIsCheckinLoading(false);
       }
     },
@@ -221,9 +229,10 @@ function ParticipantPageContent({
 
   return (
     <>
-      <div className="px-4 pt-4">
+      <div className="px-4">
         <div className="mt-2 flex flex-col gap-4">
           <div className="flex flex-col items-center gap-2 px-4">
+            <UserCircleIcon className="w-16 text-blue-600 dark:text-blue-800" />
             <Title title={participant.fullName} />
             <IndicoLink
               text="Indico participant page"
@@ -336,14 +345,14 @@ function RegistrationSection(section: SectionProps) {
 
   let bgColor = '';
   if (isOpen) {
-    bgColor += ' bg-blue-100 dark:bg-blue-800';
+    bgColor += ' bg-blue-200 dark:bg-blue-800';
   } else {
     bgColor += ' bg-gray-200 dark:bg-gray-700';
   }
 
   let expandedBorder = '';
   if (isUnique || isLast) {
-    expandedBorder += ' border-b rounded-b-xl';
+    expandedBorder += ' rounded-b-xl';
   }
 
   return (

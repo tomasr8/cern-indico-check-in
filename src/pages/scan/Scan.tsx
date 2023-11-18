@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {NavigateFunction, useNavigate} from 'react-router-dom';
 import {OAuth2Client, generateCodeVerifier} from '@badgateway/oauth2-client';
 import {VideoCameraSlashIcon} from '@heroicons/react/20/solid';
@@ -193,12 +193,26 @@ export default function ScanPage() {
     setProcessing(true);
 
     let scannedData;
-    try {
-      scannedData = JSON.parse(decodedText);
-    } catch (e: any) {
-      errorModal({title: 'Error parsing the QRCode data', content: e.message});
-      return;
-    }
+    // try {
+    //   scannedData = JSON.parse(decodedText);
+    // } catch (e: any) {
+    //   errorModal({title: 'Error parsing the QRCode data', content: e.message});
+    //   return;
+    // }
+
+    scannedData = {
+      event_id: 85,
+      title: 'Big Conference #4',
+      regform_id: 87,
+      regform_title: 'Workshops',
+      date: '2023-07-20T11:00:00+00:00',
+      version: 2,
+      server: {
+        base_url: 'https://sg1.cern.ch',
+        client_id: '50c37253-7b86-4368-8635-bfc534e810e2',
+        scope: 'registrants',
+      },
+    };
 
     scannedData = camelizeKeys(scannedData);
     if (validateEventData(scannedData)) {
@@ -237,14 +251,18 @@ export default function ScanPage() {
     setHasPermission(false);
   };
 
+  // useEffect(() => {
+  //   onScanResult('', '');
+  // }, []);
+
   return (
     <div>
       <TopNav backBtnText="Scan" backNavigateTo={-1} />
-      {!processing && (
+      {/* {!processing && (
         <div className="mt-[-1rem]">
           <QrScannerPlugin qrCodeSuccessCallback={onScanResult} onPermRefused={onPermRefused} />
         </div>
-      )}
+      )} */}
       {processing && <LoadingBanner text="Loading.." />}
       {!hasPermission && (
         <div className="mx-4 mt-2 rounded-xl bg-gray-100 dark:bg-gray-800">

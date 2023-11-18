@@ -14,7 +14,7 @@ interface variantProps {
  * Map of variants to tailwind classes
  */
 const variants: variantProps = {
-  h1: 'text-4xl text-gray-800 dark:text-gray-300',
+  h1: 'text-3xl text-gray-800 dark:text-gray-300',
   h2: 'text-2xl text-gray-800 dark:text-gray-300',
   h3: 'text-xl text-gray-800 dark:text-gray-300',
   h4: 'text-lg text-gray-800 dark:text-gray-300',

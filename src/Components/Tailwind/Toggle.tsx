@@ -1,3 +1,4 @@
+import {useEffect} from 'react';
 import {CheckIcon} from '@heroicons/react/20/solid';
 import {LoadingIndicator} from './LoadingIndicator';
 
@@ -66,6 +67,12 @@ interface CheckinToggleProps {
 }
 
 export const CheckinToggle = ({checked, isLoading, onClick}: CheckinToggleProps) => {
+  // let isLoading = _isLoading;
+  // useEffect(() => {
+  //   if(isLoading && !)
+  // }, [checked, _isLoading])
+  console.log('checked', checked, 'isLoading', isLoading);
+
   return (
     <label
       style={{WebkitTapHighlightColor: 'transparent'}}
@@ -125,7 +132,13 @@ export const CheckinToggle = ({checked, isLoading, onClick}: CheckinToggleProps)
       {isLoading && (
         <LoadingIndicator
           size="md"
-          className={`absolute bottom-0 top-0 m-auto ${checked ? 'right-[12px]' : 'left-[12px]'}`}
+          style={{
+            transition:
+              'opacity 1s cubic-bezier(0.4, 0, 0.2, 1), transform 200ms cubic-bezier(0.4, 0, 0.2, 1)',
+          }}
+          className={`absolute bottom-0 top-0 m-auto transition-all ${
+            checked ? 'right-[12px]' : 'left-[12px]'
+          }`}
         />
       )}
     </label>

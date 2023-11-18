@@ -15,10 +15,12 @@ button {
     rgb(21, 18, 66) 200px,
     rgb(17, 24, 39) 300px
   ); */
-  background-color: #061b3c;
+  background: radial-gradient(rgb(17, 24, 39), rgb(21, 18, 66));
+  /* background-color: #061b3c; */
 }
 
 .bg-gradient {
+  /* background: radial-gradient(#f9fcff, #dee9f7); */
   /* background: linear-gradient(
     155deg,
     rgb(158, 209, 255) 0%,

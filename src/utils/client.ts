@@ -207,3 +207,19 @@ export async function togglePayment(
     }
   );
 }
+
+// Make a function to delete a paraticipant
+export async function deleteParticipant({
+  serverId,
+  eventId,
+  regformId,
+  participantId,
+}: ParticipantLocator) {
+  return makeRequest<IndicoParticipant>(
+    serverId,
+    `api/checkin/event/${eventId}/forms/${regformId}/registrations/${participantId}`,
+    {
+      method: 'DELETE',
+    }
+  );
+}

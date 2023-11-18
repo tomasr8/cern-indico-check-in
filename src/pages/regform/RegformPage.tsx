@@ -27,6 +27,7 @@ import {
   useLiveRegform,
 } from '../../db/db';
 import {useConfirmModal, useErrorModal} from '../../hooks/useModal';
+import useParticipantFilters from '../../hooks/useParticipantFilters';
 import {wait} from '../../utils/wait';
 import {syncEvent, syncParticipants, syncRegform} from '../Events/sync';
 import {NotFoundBanner} from '../NotFound';
@@ -59,7 +60,6 @@ export default function RegformPage() {
         regform={regform}
         participants={participants}
       />
-      <BottomNav />
     </>
   );
 }
@@ -78,20 +78,28 @@ function RegformPageContent({
   participants: Participant[];
 }) {
   const navigate = useNavigate();
-  const {state} = useLocation();
   const errorModal = useErrorModal();
   const [isSyncing, setIsSyncing] = useState(false);
-  const [searchData, _setSearchData] = useState({
-    searchValue: state?.searchValue || '',
-    filters: state?.filters || makeDefaultFilterState(),
-  });
+  const {clear, update, ...rest} = useParticipantFilters();
+  // const [searchData, _setSearchData] = useState({
+  //   searchValue: state?.searchValue || '',
+  //   filters: state?.filters || makeDefaultFilterState(),
+  // });
+  const searchData = {searchValue: rest.searchValue, filters: rest.filters};
 
   const setSearchData = (data: SearchData) => {
-    _setSearchData(data);
+    update({...data, regformId});
+    // _setSearchData(data);
     // Save the search criteria in the location state. This way, the user can
     // go to a participant page and come back here w/o reseting the filters
-    navigate('.', {replace: true, state: {...(state || {}), ...data}});
+    // navigate('.', {replace: true, state: {...(state || {}), ...data}});
   };
+
+  useEffect(() => {
+    if (rest.regformId !== regformId) {
+      clear();
+    }
+  }, [rest.regformId]);
 
   useEffect(() => {
     async function _sync() {
@@ -128,9 +136,10 @@ function RegformPageContent({
   }
 
   return (
-    <div className="pt-4">
+    <div className="">
       <div>
         <div className="flex flex-col items-center gap-2 px-4">
+          <IconFeather className="w-16 text-blue-600 dark:text-blue-800" />
           <Title title={regform.title} />
           <IndicoLink
             text="Indico registration page"
@@ -171,7 +180,7 @@ function RegformStatus({isOpen}: {isOpen: boolean | undefined}) {
 
   let color;
   if (isOpen) {
-    color = 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300';
+    color = 'bg-green-200 text-green-800 dark:bg-green-900 dark:text-green-300';
   } else {
     color = 'bg-red-200 text-red-800 dark:bg-red-900 dark:text-red-300';
   }

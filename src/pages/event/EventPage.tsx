@@ -41,7 +41,6 @@ export default function EventPage() {
     <>
       <EventTopNav event={event} />
       <EventPageContent eventId={eventId} event={event} regforms={regforms} />
-      <BottomNav />
     </>
   );
 }
@@ -91,7 +90,7 @@ function EventPageContent({
       key={idx}
       type="button"
       onClick={() => wait(50).then(() => navigateToRegform(idx))}
-      className="flex cursor-pointer items-center justify-between gap-2 rounded-xl bg-white p-6 shadow
+      className="flex cursor-pointer items-center justify-between gap-2 rounded-xl bg-white p-6 drop-shadow
                  transition-all active:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:active:bg-gray-700"
     >
       <div className="flex flex-1 items-center">
@@ -101,7 +100,7 @@ function EventPageContent({
           </Typography>
           {regform.isOpen && (
             <span
-              className="w-fit rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium
+              className="w-fit rounded-full bg-green-200 px-2.5 py-0.5 text-xs font-medium
                          text-green-800 dark:bg-green-900 dark:text-green-300"
             >
               open
@@ -109,7 +108,7 @@ function EventPageContent({
           )}
           {regform.isOpen === false && (
             <span
-              className="w-fit rounded-full bg-red-100 px-2.5 py-0.5 text-xs font-medium
+              className="w-fit rounded-full bg-red-200 px-2.5 py-0.5 text-xs font-medium
                          text-red-800 dark:bg-red-900 dark:text-red-300"
             >
               closed
@@ -139,8 +138,9 @@ function EventPageContent({
   ));
 
   return (
-    <div className="px-4 pt-4">
-      <div className="flex flex-col items-center gap-2">
+    <div className="px-4">
+      <div className="flex flex-col items-center gap-2 overflow-hidden rounded-2xl pb-4">
+        <CalendarDaysIcon className="w-16 text-blue-600 dark:text-blue-800" />
         <Title title={event.title} />
         <IndicoLink
           text="Indico event page"
@@ -154,7 +154,7 @@ function EventPageContent({
         </span>
       </div>
       {regformList.length === 0 && <NoRegformsBanner />}
-      {regformList.length > 0 && <div className="mt-10 flex flex-col gap-4">{regformList}</div>}
+      {regformList.length > 0 && <div className="mt-4 flex flex-col gap-4">{regformList}</div>}
     </div>
   );
 }

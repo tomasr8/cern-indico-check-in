@@ -21,7 +21,6 @@ export default function Homepage() {
     <>
       <TopNav />
       <HomepageContent />
-      <BottomNav />
     </>
   );
 }
@@ -79,9 +78,12 @@ function SingleServerList({events, regforms}: {events: Event[]; regforms: Regfor
   const regformCount = countRegforms(regforms);
 
   return (
-    <div className="px-4 pt-2">
-      <EventList events={events} regformCount={regformCount} />
-    </div>
+    <>
+      <div className="flex flex-col gap-3 px-4 pt-4">
+        <Typography variant="h4">Your events</Typography>
+        <EventList events={events} regformCount={regformCount} />
+      </div>
+    </>
   );
 }
 

@@ -85,11 +85,13 @@ interface _Participant {
   checkinSecret: string;
   checkedIn: boolean;
   checkedInDt?: string;
+  checkedInLoading: boolean;
   occupiedSlots: number;
   price: number;
   currency: string;
   formattedPrice: string;
   isPaid: boolean;
+  isPaidLoading: boolean;
 }
 
 export interface Participant extends _Participant {
@@ -221,7 +223,13 @@ export async function addRegform(data: AddRegform) {
 export async function addParticipant(data: AddParticipant) {
   const deleted = data.deleted ? 1 : 0;
   const notes = data.notes || '';
-  return await db.participants.add({...data, deleted, notes});
+  return await db.participants.add({
+    ...data,
+    deleted,
+    notes,
+    checkedInLoading: false,
+    isPaidLoading: false,
+  });
 }
 
 export async function addParticipants(data: AddParticipant[]) {
@@ -229,6 +237,8 @@ export async function addParticipants(data: AddParticipant[]) {
     ...p,
     deleted: (p.deleted ? 1 : 0) as IDBBoolean,
     notes: p.notes || '',
+    checkedInLoading: false,
+    isPaidLoading: false,
   }));
 
   // Firefox does not support compound indexes with auto-incrementing keys

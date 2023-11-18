@@ -5,7 +5,7 @@ export default function BottomNav() {
   return (
     <div
       className="fixed bottom-0 left-0 z-50 h-16 w-full border-t border-gray-50
-                 bg-white dark:border-gray-800 dark:bg-gray-700"
+                 bg-gray-200/60 dark:border-gray-800 dark:bg-gray-700"
     >
       <div className="mx-auto grid h-full max-w-lg grid-cols-3 font-medium">
         <HomeButton />
@@ -31,11 +31,11 @@ function HomeButton() {
                  transition-all active:bg-gray-200 dark:active:bg-gray-800"
     >
       <HomeIcon
-        className="mb-1 h-6 w-6 text-gray-500 transition-all group-active:text-blue-600
+        className="mb-1 h-6 w-6 text-gray-600 transition-all group-active:text-blue-600
                    dark:text-gray-400 dark:group-active:text-blue-500"
       />
       <span
-        className="text-sm text-gray-500 transition-all group-active:text-blue-600
+        className="text-sm text-gray-600 transition-all group-active:text-blue-600
                    dark:text-gray-400 dark:group-active:text-blue-500"
       >
         Home
@@ -72,7 +72,7 @@ function ScanButton() {
         />
       </button>
       <span
-        className="mt-7 text-sm text-gray-500 group-hover:text-blue-600
+        className="mt-7 text-sm text-gray-600 group-hover:text-blue-600
                    dark:text-gray-400 dark:group-hover:text-blue-500"
       >
         Scan
@@ -89,7 +89,11 @@ function SettingsButton() {
     if (pathname === '/settings') {
       return;
     }
-    navigate('/settings');
+    if (document.startViewTransition) {
+      document.startViewTransition(() => navigate('/settings'));
+    } else {
+      navigate('/settings');
+    }
   };
 
   return (
@@ -104,11 +108,11 @@ function SettingsButton() {
                  px-5 active:bg-gray-200 dark:active:bg-gray-800"
     >
       <Cog8ToothIcon
-        className="mb-1 h-6 w-6 text-gray-500 transition-all group-active:text-blue-600
+        className="mb-1 h-6 w-6 text-gray-600 transition-all group-active:text-blue-600
                    dark:text-gray-400 dark:group-active:text-blue-500"
       />
       <span
-        className="text-sm text-gray-500 transition-all group-active:text-blue-600
+        className="text-sm text-gray-600 transition-all group-active:text-blue-600
                    dark:text-gray-400 dark:group-active:text-blue-500"
       >
         Settings
