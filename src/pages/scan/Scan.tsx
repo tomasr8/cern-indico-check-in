@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {VideoCameraSlashIcon} from '@heroicons/react/20/solid';
 import QrScannerPlugin from '../../Components/QrScanner/QrScannerPlugin';
@@ -34,6 +34,17 @@ export default function ScanPage() {
       errorModal({title: 'Error parsing the QRCode data', content: e.message});
       return;
     }
+
+    // scannedData = {'': [2, 'sg1.cern.ch', '3ZOeqI4hSMySscTKSM4rjw==']};
+    // scannedData = {'': [2, 'sg1.cern.ch', '3ZOeqI4hSMySscTKSM4rjw==']};
+    // scannedData = {
+    //   registrant_id: 402,
+    //   registration_id: 402,
+    //   // regform_id: 87,
+    //   checkin_secret: 'dd939ea8-8e21-48cc-92b1-c4ca48ce2b8f',
+    //   event_id: '85',
+    //   server_url: 'https://sg1.cern.ch',
+    // };
 
     scannedData = camelizeKeys(scannedData);
     if (validateEventData(scannedData)) {
@@ -83,6 +94,10 @@ export default function ScanPage() {
   const onPermRefused = () => {
     setHasPermission(false);
   };
+
+  // useEffect(() => {
+  //   onScanResult('', '');
+  // }, []);
 
   return (
     <div>

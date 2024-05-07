@@ -16,6 +16,7 @@ import useSettings from './hooks/useSettings';
 import AuthRedirectPage from './pages/Auth/AuthRedirectPage';
 import EventPage from './pages/event/EventPage';
 import Homepage from './pages/home/Homepage';
+import Installation from './pages/Installation';
 import LoadingFallback from './pages/LoadingFallback';
 import {NotFoundPage} from './pages/NotFound';
 import ParticipantPage from './pages/participant/ParticipantPage';
@@ -119,6 +120,10 @@ const router = createBrowserRouter([
       {
         path: '/auth/redirect',
         element: <AuthRedirectPage />,
+      },
+      {
+        path: '/installation',
+        element: <Installation />,
       },
     ],
   },

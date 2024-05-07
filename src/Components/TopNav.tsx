@@ -1,6 +1,7 @@
 import {useLocation, useNavigate} from 'react-router-dom';
-import {ArrowSmallLeftIcon} from '@heroicons/react/20/solid';
+import {ArrowSmallLeftIcon, InformationCircleIcon} from '@heroicons/react/20/solid';
 import Logo from '../assets/logo.png';
+import {isPwaInstalled} from '../utils/pwa';
 import {wait} from '../utils/wait';
 import DropdownSettings, {SettingsItem} from './DropdownSettings';
 
@@ -13,21 +14,30 @@ export default function TopNav({
   backNavigateTo?: string | number;
   settingsItems?: SettingsItem[];
 }) {
+  const isInstalled = isPwaInstalled();
   const navigate = useNavigate();
   const {pathname} = useLocation();
 
   const btnText = backBtnText || '';
   const page = backNavigateTo || '/';
 
+  const installPwaBtn = (
+    <button onClick={() => navigate('/installation')}>
+      <InformationCircleIcon className="h-7 w-7 text-yellow-500 dark:text-yellow-500" />
+    </button>
+  );
+  const showInstallPwaBtn = !isInstalled && pathname !== '/installation';
+
   if (pathname === '/') {
     return (
-      <div className="mb-4 flex justify-between bg-blue-600 p-2 dark:bg-blue-700">
+      <div className="mb-4 flex items-center justify-between bg-blue-600 p-2 dark:bg-blue-700">
         <div className="flex h-12 items-center gap-4" onClick={() => navigate('/')}>
           <img src={Logo} alt="Logo" width={48} height={48}></img>
           <span className="whitespace-nowrap text-xl font-semibold text-white dark:text-gray-200">
             Indico check-in
           </span>
         </div>
+        {showInstallPwaBtn && installPwaBtn}
       </div>
     );
   } else {
@@ -55,7 +65,8 @@ export default function TopNav({
             {btnText}
           </span>
         </button>
-        <div>
+        <div className="flex items-center">
+          {showInstallPwaBtn && installPwaBtn}
           {settingsItems && settingsItems.length > 0 && <DropdownSettings items={settingsItems} />}
         </div>
       </div>
