@@ -1,8 +1,7 @@
-import {ErrorModalFunction} from '../../context/ModalContextProvider';
 import db, {Event, Regform, Participant} from '../../db/db';
+import {HandleError} from '../../hooks/useError';
 import {checkInParticipant} from '../../utils/client';
 import {playSound} from '../../utils/sound';
-import {handleError} from './sync';
 
 async function resetCheckedInLoading(participant: Participant) {
   await db.participants.update(participant.id, {checkedInLoading: 0});
@@ -28,7 +27,7 @@ export async function checkIn(
   participant: Participant,
   newCheckInState: boolean,
   sound: string,
-  errorModal: ErrorModalFunction
+  handleError: HandleError
 ) {
   await db.participants.update(participant.id, {checkedInLoading: 1});
   const response = await checkInParticipant(
@@ -48,6 +47,6 @@ export async function checkIn(
     }
   } else {
     await resetCheckedInLoading(participant);
-    handleError(response, 'Something went wrong when updating check-in status', errorModal);
+    handleError(response, 'Something went wrong when updating check-in status');
   }
 }

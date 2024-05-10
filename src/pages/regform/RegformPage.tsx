@@ -25,6 +25,7 @@ import {
   useLiveParticipants,
   useLiveRegform,
 } from '../../db/db';
+import {useHandleError} from '../../hooks/useError';
 import {useConfirmModal, useErrorModal} from '../../hooks/useModal';
 import {wait} from '../../utils/wait';
 import {syncEvent, syncParticipants, syncRegform} from '../Events/sync';
@@ -77,7 +78,7 @@ function RegformPageContent({
 }) {
   const navigate = useNavigate();
   const {state} = useLocation();
-  const errorModal = useErrorModal();
+  const handleError = useHandleError();
   const [isSyncing, setIsSyncing] = useState(false);
   const [searchData, _setSearchData] = useState({
     searchValue: state?.searchValue || '',
@@ -100,9 +101,9 @@ function RegformPageContent({
         return;
       }
 
-      await syncEvent(event, controller.signal, errorModal);
-      await syncRegform(event, regform, controller.signal, errorModal);
-      await syncParticipants(event, regform, controller.signal, errorModal);
+      await syncEvent(event, controller.signal, handleError);
+      await syncRegform(event, regform, controller.signal, handleError);
+      await syncParticipants(event, regform, controller.signal, handleError);
     }
 
     async function sync() {
@@ -110,14 +111,14 @@ function RegformPageContent({
       try {
         await _sync();
       } catch (err: any) {
-        errorModal({title: 'Something went wrong when fetching updates', content: err.message});
+        handleError(err, 'Something went wrong when fetching updates');
       } finally {
         setIsSyncing(false);
       }
     }
 
     sync();
-  }, [eventId, regformId, errorModal]);
+  }, [eventId, regformId, handleError]);
 
   if (!event) {
     return <NotFoundBanner text="Event not found" icon={<CalendarDaysIcon />} />;

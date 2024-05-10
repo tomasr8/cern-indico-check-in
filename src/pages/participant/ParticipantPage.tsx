@@ -26,6 +26,7 @@ import db, {
   getRegform,
   getParticipant,
 } from '../../db/db';
+import {useHandleError} from '../../hooks/useError';
 import {useErrorModal} from '../../hooks/useModal';
 import useSettings from '../../hooks/useSettings';
 import {useIsOffline} from '../../utils/client';
@@ -102,6 +103,7 @@ function ParticipantPageContent({
   const {soundEffect} = useSettings();
   const offline = useIsOffline();
   const errorModal = useErrorModal();
+  const handleError = useHandleError();
   const [notes, setNotes] = useState('');
 
   useEffect(() => {
@@ -127,13 +129,13 @@ function ParticipantPageContent({
       }
 
       try {
-        await checkIn(event, regform, participant, newCheckinState, soundEffect, errorModal);
+        await checkIn(event, regform, participant, newCheckinState, soundEffect, handleError);
       } catch (err: any) {
-        errorModal({title: 'Could not update check-in status', content: err.message});
+        handleError(err, 'Could not update check-in status');
       } finally {
       }
     },
-    [offline, errorModal, soundEffect]
+    [offline, errorModal, handleError, soundEffect]
   );
 
   useEffect(() => {
@@ -151,18 +153,18 @@ function ParticipantPageContent({
       if (autoCheckin && !participant.checkedIn) {
         await performCheckin(event, regform, participant, true);
       } else {
-        await syncEvent(event, controller.signal, errorModal);
-        await syncRegform(event, regform, controller.signal, errorModal);
-        await syncParticipant(event, regform, participant, controller.signal, errorModal);
+        await syncEvent(event, controller.signal, handleError);
+        await syncRegform(event, regform, controller.signal, handleError);
+        await syncParticipant(event, regform, participant, controller.signal, handleError);
       }
     }
 
     sync().catch(err => {
-      errorModal({title: 'Something went wrong when fetching updates', content: err.message});
+      handleError(err, 'Something went wrong when fetching updates');
     });
 
     return () => controller.abort();
-  }, [eventId, regformId, participantId, errorModal, autoCheckin, offline, performCheckin]);
+  }, [eventId, regformId, participantId, handleError, autoCheckin, offline, performCheckin]);
 
   useEffect(() => {
     if (participant) {
@@ -251,7 +253,7 @@ function ParticipantPageContent({
               event={event}
               regform={regform}
               participant={participant}
-              errorModal={errorModal}
+              handleError={handleError}
             />
           )}
           {accompanyingPersons.length > 0 && <AccompanyingPersons persons={accompanyingPersons} />}
@@ -274,7 +276,7 @@ function ParticipantTopNav({
   regform?: Regform;
   participant?: Participant;
 }) {
-  const errorModal = useErrorModal();
+  const handleError = useHandleError();
 
   if (!event || !regform || !participant) {
     return <TopNav />;
@@ -299,7 +301,7 @@ function ParticipantTopNav({
               return;
             }
 
-            await markAsUnpaid(event, regform, participant, errorModal);
+            await markAsUnpaid(event, regform, participant, handleError);
           },
         },
       ]}

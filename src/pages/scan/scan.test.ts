@@ -85,9 +85,12 @@ describe('test handleParticipant()', () => {
   test('test missing server', async () => {
     const data = {serverUrl: ''} as any;
     const errorModal = jest.fn();
+    const handleError = jest.fn();
     const navigate = jest.fn();
 
-    await expect(handleParticipant(data, errorModal, navigate, true)).resolves.not.toThrow();
+    await expect(
+      handleParticipant(data, errorModal, handleError, navigate, true)
+    ).resolves.not.toThrow();
     expect(errorModal).toHaveBeenCalledWith({
       title: 'The server of this participant does not exist',
       content: 'Scan an event QR code first and try again.',
@@ -104,8 +107,11 @@ describe('test handleParticipant()', () => {
       checkinSecret: dummyParticipant.checkinSecret,
     } as any;
     const errorModal = jest.fn();
+    const handleError = jest.fn();
     const navigate = jest.fn();
-    await expect(handleParticipant(data, errorModal, navigate, true)).resolves.not.toThrow();
+    await expect(
+      handleParticipant(data, errorModal, handleError, navigate, true)
+    ).resolves.not.toThrow();
     expect(errorModal).toHaveBeenCalledWith({
       title: 'The registration form of this participant does not exist',
       content: 'Scan an event QR code first and try again.',
@@ -123,8 +129,11 @@ describe('test handleParticipant()', () => {
       checkinSecret: dummyParticipant.checkinSecret,
     } as any;
     const errorModal = jest.fn();
+    const handleError = jest.fn();
     const navigate = jest.fn();
-    await expect(handleParticipant(data, errorModal, navigate, true)).resolves.not.toThrow();
+    await expect(
+      handleParticipant(data, errorModal, handleError, navigate, true)
+    ).resolves.not.toThrow();
     expect(errorModal).not.toHaveBeenCalledWith();
     expect(navigate.mock.calls).toHaveLength(1);
     expect(navigate).toHaveBeenCalledWith('/event/1/1/1', {
@@ -142,18 +151,24 @@ describe('test handleParticipant()', () => {
       checkinSecret: '1234',
     } as any;
     const errorModal = jest.fn();
+    const handleError = jest.fn();
     const navigate = jest.fn();
 
     (getParticipantByUuid as any).mockResolvedValue({
       ok: false,
       status: 404,
     });
-    await expect(handleParticipant(data, errorModal, navigate, true)).resolves.not.toThrow();
+    await expect(
+      handleParticipant(data, errorModal, handleError, navigate, true)
+    ).resolves.not.toThrow();
 
-    expect(errorModal).toHaveBeenCalledWith({
-      title: 'Could not fetch participant data',
-      content: 'Response status: 404',
-    });
+    expect(handleError).toHaveBeenCalledWith(
+      {
+        ok: false,
+        status: 404,
+      },
+      'Could not fetch participant data'
+    );
     expect(navigate).not.toHaveBeenCalled();
   });
 
@@ -166,13 +181,16 @@ describe('test handleParticipant()', () => {
       checkinSecret: '1234',
     } as any;
     const errorModal = jest.fn();
+    const handleError = jest.fn();
     const navigate = jest.fn();
 
     (getParticipantByUuid as any).mockResolvedValue({
       ok: true,
       data: {id: 101, eventId: 9999, regformId: 73, checkinSecret: '1234'},
     });
-    await expect(handleParticipant(data, errorModal, navigate, true)).resolves.not.toThrow();
+    await expect(
+      handleParticipant(data, errorModal, handleError, navigate, true)
+    ).resolves.not.toThrow();
 
     expect(errorModal).toHaveBeenCalledWith({
       title: 'The event of this participant does not exist',
@@ -190,13 +208,16 @@ describe('test handleParticipant()', () => {
       checkinSecret: '1234',
     } as any;
     const errorModal = jest.fn();
+    const handleError = jest.fn();
     const navigate = jest.fn();
 
     (getParticipantByUuid as any).mockResolvedValue({
       ok: true,
       data: {id: 101, eventId: 42, regformId: 9999, checkinSecret: '1234'},
     });
-    await expect(handleParticipant(data, errorModal, navigate, true)).resolves.not.toThrow();
+    await expect(
+      handleParticipant(data, errorModal, handleError, navigate, true)
+    ).resolves.not.toThrow();
 
     expect(errorModal).toHaveBeenCalledWith({
       title: 'The registration form of this participant does not exist',
@@ -214,13 +235,16 @@ describe('test handleParticipant()', () => {
       checkinSecret: '1234',
     } as any;
     const errorModal = jest.fn();
+    const handleError = jest.fn();
     const navigate = jest.fn();
 
     (getParticipantByUuid as any).mockResolvedValue({
       ok: true,
       data: {id: 101, eventId: 42, regformId: 73, checkinSecret: '1234'},
     });
-    await expect(handleParticipant(data, errorModal, navigate, true)).resolves.not.toThrow();
+    await expect(
+      handleParticipant(data, errorModal, handleError, navigate, true)
+    ).resolves.not.toThrow();
 
     const participant = await db.participants.get(1);
     expect(participant).toEqual({

@@ -5,6 +5,7 @@ import QrScannerPlugin from '../../Components/QrScanner/QrScannerPlugin';
 import {Typography} from '../../Components/Tailwind';
 import LoadingBanner from '../../Components/Tailwind/LoadingBanner';
 import TopNav from '../../Components/TopNav';
+import {useHandleError} from '../../hooks/useError';
 import {useErrorModal} from '../../hooks/useModal';
 import useSettings from '../../hooks/useSettings';
 import {camelizeKeys} from '../../utils/case';
@@ -18,6 +19,7 @@ export default function ScanPage() {
   const {autoCheckin} = useSettings();
   const navigate = useNavigate();
   const errorModal = useErrorModal();
+  const handleError = useHandleError();
   const offline = useIsOffline();
 
   async function processCode(decodedText: string) {
@@ -31,7 +33,7 @@ export default function ScanPage() {
     try {
       scannedData = JSON.parse(decodedText);
     } catch (e: any) {
-      errorModal({title: 'Error parsing the QRCode data', content: e.message});
+      handleError(e, 'Error parsing the QRCode data');
       return;
     }
 
@@ -48,7 +50,7 @@ export default function ScanPage() {
       try {
         await handleEvent(scannedData, errorModal, navigate);
       } catch (e: any) {
-        errorModal({title: 'Error processing QR code', content: e.message});
+        handleError(e, 'Error processing QR code');
       }
       return;
     }
@@ -56,9 +58,9 @@ export default function ScanPage() {
     const parsedData = parseQRCodeParticipantData(scannedData);
     if (parsedData) {
       try {
-        await handleParticipant(parsedData, errorModal, navigate, autoCheckin);
+        await handleParticipant(parsedData, errorModal, handleError, navigate, autoCheckin);
       } catch (e: any) {
-        errorModal({title: 'Error processing QR code', content: e.message});
+        handleError(e, 'Error processing QR code');
       }
     } else {
       errorModal({
@@ -72,7 +74,7 @@ export default function ScanPage() {
     try {
       await processCode(decodedText);
     } catch (e: any) {
-      errorModal({title: 'Error processing QR code', content: e.message});
+      handleError(e, 'Error processing QR code');
     } finally {
       setProcessing(false);
     }
