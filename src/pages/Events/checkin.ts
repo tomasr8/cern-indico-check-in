@@ -4,12 +4,17 @@ import {checkInParticipant} from '../../utils/client';
 import {playSound} from '../../utils/sound';
 import {handleError} from './sync';
 
+async function resetCheckedInLoading(participant: Participant) {
+  await db.participants.update(participant.id, {checkedInLoading: 0});
+}
+
 async function updateCheckinState(
   regform: Regform,
   participant: Participant,
   newCheckInState: boolean
 ) {
   return db.transaction('readwrite', db.regforms, db.participants, async () => {
+    await resetCheckedInLoading(participant);
     await db.participants.update(participant.id, {checkedIn: newCheckInState, checkedInLoading: 0});
     const slots = participant.occupiedSlots;
     const checkedInCount = regform.checkedInCount + (newCheckInState ? slots : -slots);
@@ -42,6 +47,7 @@ export async function checkIn(
       playSound(sound);
     }
   } else {
+    await resetCheckedInLoading(participant);
     handleError(response, 'Something went wrong when updating check-in status', errorModal);
   }
 }
