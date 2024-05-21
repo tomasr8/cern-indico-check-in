@@ -1,7 +1,8 @@
 import {useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {VideoCameraSlashIcon} from '@heroicons/react/20/solid';
-import QrScannerPlugin from '../../Components/QrScanner/QrScannerPlugin';
+import {ArrowUpTrayIcon} from '@heroicons/react/24/solid';
+import QrScannerPlugin, {scanFile} from '../../Components/QrScanner/QrScannerPlugin';
 import {Typography} from '../../Components/Tailwind';
 import LoadingBanner from '../../Components/Tailwind/LoadingBanner';
 import TopNav from '../../Components/TopNav';
@@ -86,9 +87,29 @@ export default function ScanPage() {
     setHasPermission(false);
   };
 
+  const onFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) {
+      return;
+    }
+
+    try {
+      const decodedText = await scanFile(file);
+      // console.log(decodedText);
+      onScanResult(decodedText, null);
+    } catch (e: any) {
+      handleError(e, 'Error processing QR code');
+    }
+  };
+
   return (
     <div>
       <TopNav backBtnText="Scan" backNavigateTo={-1} />
+      {!processing && process.env.NODE_ENV !== 'production' && (
+        <div className="mb-[3rem] mt-[1rem] flex justify-center">
+          <FileUploadScanner onFileUpload={onFileUpload} />
+        </div>
+      )}
       {!processing && (
         <div className="mt-[-1rem]">
           <QrScannerPlugin qrCodeSuccessCallback={onScanResult} onPermRefused={onPermRefused} />
@@ -106,5 +127,26 @@ export default function ScanPage() {
         </div>
       )}
     </div>
+  );
+}
+
+function FileUploadScanner({
+  onFileUpload,
+}: {
+  onFileUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
+}) {
+  return (
+    <>
+      <input id="qr-file" type="file" accept="image/*" onChange={onFileUpload} className="hidden" />
+      <label
+        htmlFor="qr-file"
+        className="fit-content flex h-fit gap-2 justify-self-center rounded-lg bg-primary
+  px-4 py-3 text-sm font-medium text-white focus:outline-none active:bg-blue-800 dark:bg-blue-600 dark:active:bg-blue-700"
+      >
+        <ArrowUpTrayIcon className="h-6 w-6" />
+        <span className="ml-2">Upload QR code image</span>
+      </label>
+      <div id="file-upload"></div>
+    </>
   );
 }

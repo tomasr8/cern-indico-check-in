@@ -101,13 +101,20 @@ export interface FailedResponse {
   description?: string;
 }
 
+interface Options extends Object {
+  type?: 'json' | 'arrayBuffer';
+  [key: string]: any;
+}
+
 type Response<T> = SuccessfulResponse<T> | FailedResponse;
 
 async function makeRequest<T>(
   serverId: number,
   endpoint: string,
-  options: object = {}
+  options: Options = {}
 ): Promise<Response<T>> {
+  const {type = 'json', ...fetchOptions} = options;
+
   const server = await db.servers.get(serverId);
   if (!server) {
     return {
@@ -122,7 +129,7 @@ async function makeRequest<T>(
   let response;
   try {
     response = await fetch(url, {
-      ...options,
+      ...fetchOptions,
       headers: {
         'Authorization': `Bearer ${server.authToken}`,
         'Content-Type': 'application/json',
@@ -139,17 +146,35 @@ async function makeRequest<T>(
 
   let data;
   try {
-    data = await response.json();
+    data = await response[type]();
   } catch (err) {
-    return {ok: false, endpoint, options, err, description: 'response.json() failed'};
+    return {ok: false, endpoint, options, err, description: `response.${type}() failed`};
   }
 
   if (!response.ok) {
     return {ok: false, status: response.status, endpoint, options, data};
   }
 
-  data = camelizeKeys(data);
+  if (type === 'json') {
+    data = camelizeKeys(data);
+  }
   return {ok: true, status: response.status, data};
+}
+
+async function makeJsonRequest<T>(
+  serverId: number,
+  endpoint: string,
+  options: Options = {}
+): Promise<Response<T>> {
+  return makeRequest<T>(serverId, endpoint, {...options, type: 'json'});
+}
+
+async function makeBufferRequest<T>(
+  serverId: number,
+  endpoint: string,
+  options: Options = {}
+): Promise<Response<T>> {
+  return makeRequest<T>(serverId, endpoint, {...options, type: 'arrayBuffer'});
 }
 
 export async function getEvent({serverId, eventId}: EventLocator, options?: object) {
@@ -223,4 +248,12 @@ export async function togglePayment(
       body: JSON.stringify({paid}),
     }
   );
+}
+
+export async function getRegistrationFile(
+  serverId: number,
+  endpoint: string,
+  options: object = {}
+) {
+  return makeBufferRequest<ArrayBuffer>(serverId, endpoint, options);
 }

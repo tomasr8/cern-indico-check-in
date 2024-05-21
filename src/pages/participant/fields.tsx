@@ -1,4 +1,8 @@
+import {useEffect, useState} from 'react';
+import {useParams} from 'react-router-dom';
 import {Typography} from '../../Components/Tailwind';
+import {getEvent} from '../../db/db';
+import {getRegistrationFile} from '../../utils/client';
 import {formatDatetime} from '../../utils/date';
 
 export interface FieldProps {
@@ -36,6 +40,18 @@ interface CountryFieldProps extends FieldProps {
   choices: Country[];
 }
 
+interface FileFieldProps extends FieldProps {
+  fileData: FileData;
+}
+
+interface PictureFieldProps extends FileFieldProps {}
+
+interface FileData {
+  filename: string;
+  size: number;
+  url: string;
+}
+
 export function Field(field: FieldProps) {
   switch (field.inputType) {
     case 'text':
@@ -51,7 +67,9 @@ export function Field(field: FieldProps) {
     case 'checkbox':
       return <CheckboxField {...field} />;
     case 'file':
-      return <FileField {...field} />;
+      return <FileField {...(field as FileFieldProps)} />;
+    case 'picture':
+      return <PictureField {...(field as PictureFieldProps)} />;
     case 'country':
       return <CountryField {...(field as CountryFieldProps)} />;
     case 'single_choice':
@@ -122,11 +140,89 @@ function CheckboxField({title, description, data}: FieldProps) {
   );
 }
 
-function FileField({title, description, data: filename}: FieldProps) {
+function FileField({title, description, fileData}: FileFieldProps) {
+  const {id} = useParams();
+
+  async function downloadFile() {
+    if (!id) {
+      return;
+    }
+
+    const event = await getEvent(parseInt(id, 10));
+    if (!event) {
+      return;
+    }
+    const response = await getRegistrationFile(event.serverId, fileData.url);
+    if (!response.ok) {
+      return;
+    }
+
+    var blob = new Blob([response.data]);
+
+    var dlink = document.createElement('a');
+    dlink.download = fileData.filename;
+    dlink.href = window.URL.createObjectURL(blob);
+    dlink.onclick = function (e) {
+      // revokeObjectURL needs a delay to work properly
+      setTimeout(function () {
+        window.URL.revokeObjectURL(dlink.href);
+      }, 1500);
+    };
+
+    dlink.click();
+    dlink.remove();
+
+    // if (response.ok) {
+    //   setImageData(`data:image/png;base64, ${toBase64(response.data)}`);
+    // }
+  }
+
   return (
     <div>
       <FieldHeader title={title} description={description} />
-      <Typography variant="body1">{filename}</Typography>
+      <Typography variant="body1">
+        <button type="button" onClick={downloadFile} className="text-blue-600 underline">
+          {fileData.filename}
+        </button>
+        {/* <a href=>{fileData.filename}</a> */}
+      </Typography>
+    </div>
+  );
+}
+
+function PictureField({title, description, fileData}: PictureFieldProps) {
+  const {id} = useParams();
+  const [imageData, setImageData] = useState<string>('');
+
+  function toBase64(buf: ArrayBuffer): string {
+    const arr = new Uint8Array(buf);
+    return window.btoa(arr.reduce((data: any, byte: any) => data + String.fromCharCode(byte), ''));
+  }
+
+  useEffect(() => {
+    async function fetchImage() {
+      if (!id) {
+        return;
+      }
+
+      const event = await getEvent(parseInt(id, 10));
+      if (!event) {
+        return;
+      }
+      const response = await getRegistrationFile(event.serverId, fileData.url);
+      if (response.ok) {
+        setImageData(`data:image/png;base64, ${toBase64(response.data)}`);
+      }
+    }
+    fetchImage();
+  }, [id, fileData.url, setImageData]);
+
+  return (
+    <div>
+      <FieldHeader title={title} description={description} />
+      <Typography variant="body1">
+        <img src={imageData} alt={fileData.filename} />
+      </Typography>
     </div>
   );
 }

@@ -222,7 +222,12 @@ function ParticipantPageContent({
       <div className="px-4">
         <div className="mt-2 flex flex-col gap-4">
           <div className="flex flex-col items-center gap-2 px-4">
-            <UserIcon className="w-16 text-blue-600 dark:text-blue-700" />
+            <img
+              src="https://sg1.cern.ch/event/85/manage/registration/117/registrations/556/file/1371-picture.png"
+              className="w-20 rounded-full"
+              alt="Participant profile"
+            />
+            {/* <UserIcon className="w-16 text-blue-600 dark:text-blue-700" /> */}
             <Title title={participant.fullName} />
             <IndicoLink
               text="Indico participant page"

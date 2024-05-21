@@ -18,6 +18,16 @@ export const calcAspectRatio = () => {
   return 1.777778;
 };
 
+export async function scanFile(file: File): Promise<string> {
+  const scanner = new Html5Qrcode('file-upload', {
+    formatsToSupport: [Html5QrcodeSupportedFormats.QR_CODE],
+    verbose: true,
+  });
+
+  const result = await scanner.scanFileV2(file, false);
+  return result.decodedText;
+}
+
 interface QrProps {
   fps?: number; // Expected frame rate of qr code scanning. example { fps: 2 } means the scanning would be done every 500 ms.
   qrbox?: number;
