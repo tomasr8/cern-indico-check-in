@@ -12,7 +12,7 @@ export function deepEqual(a: unknown, b: unknown): boolean {
   }
 
   if (typeof a === 'object' && typeof b === 'object') {
-    return deepEqualObject(a as Record<string, unknown>, b as Record<string, unknown>);
+    return deepEqualObject(a, b);
   }
 
   return false;
@@ -31,14 +31,14 @@ function deepEqualArray(a: unknown[], b: unknown[]): boolean {
   return true;
 }
 
-function deepEqualObject(a: Record<string, unknown>, b: Record<string, unknown>): boolean {
+function deepEqualObject(a: object, b: object): boolean {
   const keys = Object.keys(a);
   if (keys.length !== Object.keys(b).length) {
     return false;
   }
 
   for (const key of keys) {
-    if (!deepEqual(a[key], b[key])) {
+    if (!deepEqual(a[key as keyof typeof a], b[key as keyof typeof b])) {
       return false;
     }
   }

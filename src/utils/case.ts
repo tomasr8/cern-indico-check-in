@@ -8,16 +8,17 @@ function camelizeKey(key: string) {
 }
 
 export function camelizeKeys<T>(obj: T): T {
-  if (Array.isArray(obj)) {
-    return obj.map(camelizeKeys) as unknown as T;
-  } else if (obj === null) {
+  if (obj === null) {
     return obj;
+  } else if (Array.isArray(obj)) {
+    return obj.map(camelizeKeys) as T;
   } else if (typeof obj === 'object') {
     const camelized: {[key: string]: unknown} = {};
     for (const key in obj) {
-      camelized[camelizeKey(key)] = camelizeKeys(obj[key]);
+      const value = obj[key as keyof typeof obj];
+      camelized[camelizeKey(key)] = camelizeKeys(value);
     }
-    return camelized as unknown as T;
+    return camelized as T;
   }
   return obj;
 }

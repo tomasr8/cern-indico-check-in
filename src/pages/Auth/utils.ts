@@ -16,8 +16,12 @@ export interface QRCodeEventData {
   server: QRCodeServerData;
 }
 
-export function validateEventData(data: QRCodeEventData): data is QRCodeEventData {
-  if (typeof data !== 'object') {
+function isRecord(obj: unknown): obj is Record<string, unknown> {
+  return typeof obj === 'object' && obj !== null;
+}
+
+export function validateEventData(data: unknown): data is QRCodeEventData {
+  if (!isRecord(data)) {
     return false;
   }
 
@@ -28,16 +32,19 @@ export function validateEventData(data: QRCodeEventData): data is QRCodeEventDat
   if (typeof title !== 'string' || typeof regformTitle !== 'string') {
     return false;
   }
-  if (new Date(date).toString() === 'Invalid Date') {
+  if (typeof date !== 'string' || new Date(date).toString() === 'Invalid Date') {
     return false;
   }
 
-  const server: QRCodeServerData = data?.server ?? {};
-  if (typeof server !== 'object') {
+  const server = data?.server ?? {};
+  if (!isRecord(server)) {
     return false;
   }
 
   const {baseUrl, clientId, scope} = server;
+  if (typeof baseUrl !== 'string') {
+    return false;
+  }
   try {
     new URL(baseUrl);
   } catch {

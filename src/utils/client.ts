@@ -137,7 +137,7 @@ async function makeRequest<T>(
     return {ok: false, network: true, endpoint, options, err: e};
   }
 
-  let data;
+  let data: T;
   try {
     data = await response.json();
   } catch (e) {
